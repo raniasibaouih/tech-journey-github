@@ -86,6 +86,8 @@ Your Codespace uses your free hours while it is running. When you finish a work 
 
 A stopped Codespace keeps all your files and picks up right where you left off next time — it just stops the clock. Codespaces also stop themselves automatically after about 30 minutes of inactivity, so you are protected even if you forget.
 
+> **For today, do not worry about this.** This is only a ~3-hour course and you are nowhere near the free limit, so leave your Codespace running for the whole session. Just keep this habit in mind for the future, when you work on longer projects across many days.
+
 > **Do not delete your Codespace until your work is committed and pushed** (Step 6). Stopping is safe; deleting an uncommitted Codespace loses your work.
 
 ---
