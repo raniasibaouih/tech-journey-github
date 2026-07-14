@@ -13,22 +13,20 @@ Copy the content below into a new file called `about-me.md` in this same folder,
 
 ---
 
-```markdown
 ## About Me
 
 **Name:** Rania Sibaouih
 
-**School or Grade:** [Optional]
+**School or Grade:** Central Academy, upcoming 11th grader
 
 **Why I joined Tech Journey:**
-[Write 1-2 sentences about what made you want to join this program]
+I am interested in tech because I would like to expand my knowledge and learn new skills.
 
 **Something I am interested in:**
-[Could be anything — a hobby, a subject, a game, a sport]
+I am interested in healthcare and basketball, and I am eager to learn more about technology and how it works.
 
 **One thing I hope to learn:**
-[What do you want to be able to do after this program?]
-```
+I would like to learn more about coding and how it can be incorporated into healthcare.
 
 ---
 
