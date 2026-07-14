@@ -60,63 +60,198 @@
     </script>
   </head>
 
-  <!-- The classes below set the gradient background and center the card. -->
+  <!-- Animated gradient background with animated particles -->
   <body
-    class="min-h-screen bg-gradient-to-br from-indigo-500 to-purple-600 flex justify-center items-start p-4"
+    x-data="{ 
+      scroll: 0,
+      stars: Array.from({length: 50}, (_, i) => ({
+        id: i,
+        left: Math.random() * 100,
+        delay: Math.random() * 20
+      }))
+    }"
+    @scroll.window="scroll = window.scrollY"
+    class="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white overflow-x-hidden"
   >
-    <main class="bg-white w-full max-w-2xl my-12 p-10 rounded-2xl shadow-2xl">
-      <!-- ▼▼▼ START EDITING HERE ▼▼▼ -->
+    <!-- Floating stars background -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden">
+      <template x-for="star in stars">
+        <div
+          :key="star.id"
+          :style="{ left: star.left + '%', 'animation-delay': star.delay + 's' }"
+          class="absolute w-1 h-1 bg-white rounded-full opacity-60 animate-pulse"
+          :class="{'top-1/4': star.id % 3 === 0, 'top-1/3': star.id % 3 === 1, 'top-1/2': star.id % 3 === 2}"
+        ></div>
+      </template>
+    </div>
 
-      <h1 class="text-4xl font-extrabold text-gray-900">
-        Hi, I'm Rania Sibaouih <span class="inline-block">👋</span>
-      </h1>
-      <p class="text-lg text-gray-500 mt-1">
-        A future developer learning Git, GitHub, and Copilot.
-      </p>
-
-      <h2 class="text-2xl font-semibold mt-8 pb-1 border-b-4 border-purple-400">
-        About Me
-      </h2>
-      <p class="mt-3 text-gray-700">
-        I am an upcoming 11th grader at Central Academy, and I am interested in
-        technology because I want to expand my knowledge and learn new skills.
-      </p>
-
-      <h2 class="text-2xl font-semibold mt-8 pb-1 border-b-4 border-purple-400">
-        Things I'm Into
-      </h2>
-      <ul class="mt-3 space-y-1 text-gray-700 list-disc list-inside">
-        <li>Healthcare</li>
-        <li>Basketball</li>
-        <li>Learning how coding can connect to healthcare</li>
-      </ul>
-
-      <h2 class="text-2xl font-semibold mt-8 pb-1 border-b-4 border-purple-400">
-        What I'm Learning
-      </h2>
-      <p class="mt-3 text-gray-700">
-        I am learning more about coding and how it can be used in healthcare to
-        make a positive impact.
-      </p>
-
-      <!--
-        A little interactive button, powered by Alpine.js.
-        x-data gives this box a tiny bit of "memory" (waves),
-        @click runs code when clicked, and x-text shows a value.
-      -->
-      <div x-data="{ waves: 0 }" class="mt-8">
+    <!-- Hero Section -->
+    <header class="relative z-10 min-h-screen flex items-center justify-center p-4">
+      <div class="text-center max-w-4xl mx-auto">
+        <!-- Large emoji with bounce animation -->
+        <div class="mb-6 text-7xl animate-bounce" style="animation-duration: 2s;">
+          👋
+        </div>
+        
+        <!-- Main title with gradient text -->
+        <h1 class="text-6xl md:text-7xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400">
+          Hi, I'm Rania Sibaouih
+        </h1>
+        
+        <!-- Subtitle with typing effect description -->
+        <p class="text-2xl md:text-3xl text-purple-200 mb-8">
+          Future Developer & Healthcare Tech Innovator 🚀
+        </p>
+        
+        <!-- Call-to-action button with glow -->
         <button
-          @click="waves++"
-          class="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-5 py-2 rounded-lg shadow transition"
+          onclick="document.querySelector('#about').scrollIntoView({behavior: 'smooth'})"
+          class="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full font-bold text-lg hover:shadow-2xl hover:shadow-purple-500/50 transform hover:scale-105 transition"
         >
-          <i class="fa-solid fa-hand"></i> Wave at me
+          Explore My Journey ↓
         </button>
-        <span x-show="waves > 0" class="ml-3 text-gray-600">
-          Thanks for the <span x-text="waves"></span> wave(s)! 👋
-        </span>
       </div>
+    </header>
 
-      <!-- ▲▲▲ STOP EDITING HERE (or keep going — it's your page!) ▲▲▲ -->
+    <!-- Content Section -->
+    <main class="relative z-10 max-w-5xl mx-auto px-4 py-20">
+      <!-- About Me Card -->
+      <section id="about" class="mb-20 group">
+        <div class="bg-gradient-to-br from-blue-900/50 to-purple-900/50 backdrop-blur-lg rounded-2xl p-8 md:p-12 border border-purple-500/30 hover:border-purple-400/60 transition duration-300 shadow-2xl">
+          <div class="flex items-center gap-3 mb-6">
+            <i class="fa-solid fa-circle-user text-3xl text-blue-400"></i>
+            <h2 class="text-4xl font-bold">About Me</h2>
+          </div>
+          <p class="text-lg text-gray-300 leading-relaxed">
+            I'm an upcoming 11th grader at Central Academy with a passion for <span class="text-blue-300 font-semibold">technology and innovation</span>. I want to expand my knowledge and learn skills that can make a real difference in the world. Every line of code I write brings me closer to my goal of revolutionizing healthcare through technology.
+          </p>
+        </div>
+      </section>
+
+      <!-- Skills/Interests Grid -->
+      <section class="mb-20">
+        <h2 class="text-4xl font-bold mb-10 text-center">
+          <i class="fa-solid fa-star text-yellow-400 mr-3"></i>Things I'm Into
+        </h2>
+        <div class="grid md:grid-cols-3 gap-6">
+          <!-- Interest Card 1 -->
+          <div x-data="{ hovered: false }" @mouseenter="hovered = true" @mouseleave="hovered = false" class="bg-gradient-to-br from-green-900/50 to-emerald-900/50 backdrop-blur-lg rounded-2xl p-8 border border-green-500/30 hover:border-green-400/60 transition duration-300 transform hover:scale-105 hover:shadow-xl hover:shadow-green-500/20 cursor-pointer">
+            <div class="text-5xl mb-4">
+              <i class="fa-solid fa-heart text-red-400"></i>
+            </div>
+            <h3 class="text-2xl font-bold mb-3">Healthcare</h3>
+            <p class="text-gray-300">Passionate about technology solutions that save lives and improve wellness worldwide.</p>
+            <div class="mt-4 flex gap-2 flex-wrap">
+              <span class="px-3 py-1 bg-red-500/20 text-red-300 rounded-full text-sm border border-red-500/30">Impact</span>
+              <span class="px-3 py-1 bg-pink-500/20 text-pink-300 rounded-full text-sm border border-pink-500/30">Innovation</span>
+            </div>
+          </div>
+
+          <!-- Interest Card 2 -->
+          <div class="bg-gradient-to-br from-orange-900/50 to-yellow-900/50 backdrop-blur-lg rounded-2xl p-8 border border-orange-500/30 hover:border-orange-400/60 transition duration-300 transform hover:scale-105 hover:shadow-xl hover:shadow-orange-500/20 cursor-pointer">
+            <div class="text-5xl mb-4">
+              <i class="fa-solid fa-basketball text-orange-400"></i>
+            </div>
+            <h3 class="text-2xl font-bold mb-3">Basketball</h3>
+            <p class="text-gray-300">Team player on and off the court. I love the strategy, speed, and energy of the game.</p>
+            <div class="mt-4 flex gap-2 flex-wrap">
+              <span class="px-3 py-1 bg-orange-500/20 text-orange-300 rounded-full text-sm border border-orange-500/30">Sports</span>
+              <span class="px-3 py-1 bg-yellow-500/20 text-yellow-300 rounded-full text-sm border border-yellow-500/30">Teamwork</span>
+            </div>
+          </div>
+
+          <!-- Interest Card 3 -->
+          <div class="bg-gradient-to-br from-purple-900/50 to-pink-900/50 backdrop-blur-lg rounded-2xl p-8 border border-purple-500/30 hover:border-purple-400/60 transition duration-300 transform hover:scale-105 hover:shadow-xl hover:shadow-purple-500/20 cursor-pointer">
+            <div class="text-5xl mb-4">
+              <i class="fa-solid fa-code text-purple-400"></i>
+            </div>
+            <h3 class="text-2xl font-bold mb-3">Code × Healthcare</h3>
+            <p class="text-gray-300">My ultimate goal: bridging the gap between healthcare and technology to create innovative solutions.</p>
+            <div class="mt-4 flex gap-2 flex-wrap">
+              <span class="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm border border-purple-500/30">Coding</span>
+              <span class="px-3 py-1 bg-pink-500/20 text-pink-300 rounded-full text-sm border border-pink-500/30">Vision</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Learning Section -->
+      <section class="mb-20">
+        <div class="bg-gradient-to-r from-cyan-900/50 to-blue-900/50 backdrop-blur-lg rounded-2xl p-8 md:p-12 border border-cyan-500/30 hover:border-cyan-400/60 transition duration-300 shadow-2xl">
+          <div class="flex items-center gap-3 mb-6">
+            <i class="fa-solid fa-graduation-cap text-3xl text-cyan-400"></i>
+            <h2 class="text-4xl font-bold">What I'm Learning</h2>
+          </div>
+          <p class="text-lg text-gray-300 leading-relaxed mb-6">
+            I'm diving deep into coding and exploring how it can be used in healthcare to make a positive impact. Every day is a learning opportunity to build skills that matter.
+          </p>
+          
+          <!-- Learning Path Timeline -->
+          <div class="space-y-4 mt-6">
+            <div class="flex gap-4 items-start">
+              <div class="w-12 h-12 rounded-full bg-gradient-to-r from-blue-400 to-cyan-400 flex items-center justify-center flex-shrink-0 text-white font-bold">
+                <i class="fa-solid fa-code"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-lg text-cyan-300">Git & GitHub</h4>
+                <p class="text-gray-400">Mastering version control and collaboration</p>
+              </div>
+            </div>
+            <div class="flex gap-4 items-start">
+              <div class="w-12 h-12 rounded-full bg-gradient-to-r from-purple-400 to-pink-400 flex items-center justify-center flex-shrink-0 text-white font-bold">
+                <i class="fa-solid fa-star"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-lg text-pink-300">GitHub Copilot</h4>
+                <p class="text-gray-400">Leveraging AI to accelerate development</p>
+              </div>
+            </div>
+            <div class="flex gap-4 items-start">
+              <div class="w-12 h-12 rounded-full bg-gradient-to-r from-green-400 to-emerald-400 flex items-center justify-center flex-shrink-0 text-white font-bold">
+                <i class="fa-solid fa-heartbeat"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-lg text-emerald-300">Healthcare Tech</h4>
+                <p class="text-gray-400">Building solutions that save lives</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Interactive Wave Button Section -->
+      <section class="text-center mb-20">
+        <div x-data="{ waves: 0, energy: 0 }" class="inline-block">
+          <button
+            @click="waves++; energy = 100"
+            class="px-8 py-4 bg-gradient-to-r from-yellow-500 to-red-500 rounded-full font-bold text-lg text-white hover:shadow-2xl hover:shadow-yellow-500/50 transform hover:scale-110 transition duration-200 active:scale-95"
+          >
+            <i class="fa-solid fa-hand-fist mr-2"></i> Wave at me!
+          </button>
+          
+          <div x-show="waves > 0" class="mt-6">
+            <p class="text-2xl font-bold text-yellow-300">
+              Thanks for the <span x-text="waves" class="text-3xl text-yellow-200"></span> wave(s)! 
+              <span class="inline-block animate-bounce" style="animation-duration: 0.6s;">👋</span>
+            </p>
+            <p class="text-gray-400 mt-2">
+              <i class="fa-solid fa-fire text-orange-500 mr-2"></i>
+              Wave Power: <span x-text="waves * 10 + '%'" class="text-orange-400 font-bold"></span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="text-center py-10 border-t border-purple-500/30">
+        <p class="text-gray-400">
+          <i class="fa-solid fa-code mr-2"></i>Built with Tailwind CSS, Alpine.js & Copilot
+        </p>
+        <p class="text-sm text-gray-500 mt-2">
+          Ready to change the world 🌍
+        </p>
+      </footer>
+    </main>
 
       <footer class="mt-10 text-center text-sm text-gray-400">
         Built with <i class="fa-solid fa-heart text-purple-400"></i> during the
