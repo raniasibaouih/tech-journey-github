@@ -57,6 +57,103 @@
           },
         },
       };
+
+      // Basketball Game Logic
+      function basketballGame() {
+        return {
+          score: 0,
+          shotsTaken: 0,
+          ballX: 20,
+          ballY: 70,
+          ballVisible: false,
+          shooting: false,
+          feedback: false,
+          lastMade: false,
+          
+          accuracy: 0,
+
+          updateAccuracy() {
+            if (this.shotsTaken === 0) {
+              this.accuracy = 0;
+            } else {
+              this.accuracy = Math.round((this.score / this.shotsTaken) * 100);
+            }
+          },
+
+          shoot() {
+            if (this.shooting) return;
+            
+            this.shooting = true;
+            this.shotsTaken++;
+            this.ballVisible = true;
+            this.feedback = false;
+            
+            // Random shot difficulty
+            const shotDifficulty = Math.random();
+            // Hoop is at right-12 (around 85% from left) and top-8 (around 5% from top)
+            const hoopX = 85;
+            const hoopY = 8;
+            
+            // Determine if shot makes it (easier at closer distances, harder the further)
+            const accuracy = Math.random();
+            let made = false;
+            
+            if (shotDifficulty < 0.4) {
+              // Easy shot - 70% make rate
+              made = accuracy < 0.7;
+            } else if (shotDifficulty < 0.7) {
+              // Medium shot - 50% make rate
+              made = accuracy < 0.5;
+            } else {
+              // Hard shot - 30% make rate
+              made = accuracy < 0.3;
+            }
+            
+            // Animate ball to hoop
+            setTimeout(() => {
+              this.ballX = hoopX;
+              this.ballY = hoopY;
+            }, 50);
+            
+            // Check if made after animation completes
+            setTimeout(() => {
+              this.lastMade = made;
+              this.feedback = true;
+              
+              if (made) {
+                // More points for harder shots
+                let points = 1;
+                if (shotDifficulty >= 0.7) points = 3;
+                else if (shotDifficulty >= 0.4) points = 2;
+                
+                this.score += points;
+              }
+              
+              this.updateAccuracy();
+              
+              // Hide ball and reset
+              setTimeout(() => {
+                this.ballVisible = false;
+                this.ballX = 20;
+                this.ballY = 70;
+                this.shooting = false;
+                this.feedback = false;
+              }, 1000);
+            }, 600);
+          },
+
+          resetGame() {
+            this.score = 0;
+            this.shotsTaken = 0;
+            this.accuracy = 0;
+            this.ballVisible = false;
+            this.shooting = false;
+            this.feedback = false;
+            this.ballX = 20;
+            this.ballY = 70;
+          }
+        };
+      }
     </script>
   </head>
 
@@ -239,6 +336,94 @@
               Wave Power: <span x-text="waves * 10 + '%'" class="text-orange-400 font-bold"></span>
             </p>
           </div>
+        </div>
+      </section>
+
+      <!-- Basketball Game Section -->
+      <section class="mb-20">
+        <h2 class="text-4xl font-bold mb-10 text-center">
+          <i class="fa-solid fa-basketball text-orange-400 mr-3"></i>Basketball Shooter Game
+        </h2>
+        <div x-data="basketballGame()" class="bg-gradient-to-br from-green-900/50 to-emerald-900/50 backdrop-blur-lg rounded-2xl p-8 md:p-12 border border-green-500/30 shadow-2xl">
+          
+          <!-- Game Stats -->
+          <div class="grid grid-cols-3 gap-4 mb-8">
+            <div class="bg-green-900/50 rounded-lg p-4 text-center border border-green-400/30">
+              <p class="text-gray-400 text-sm uppercase tracking-wider">Score</p>
+              <p class="text-4xl font-bold text-green-300" x-text="score"></p>
+            </div>
+            <div class="bg-yellow-900/50 rounded-lg p-4 text-center border border-yellow-400/30">
+              <p class="text-gray-400 text-sm uppercase tracking-wider">Shots Taken</p>
+              <p class="text-4xl font-bold text-yellow-300" x-text="shotsTaken"></p>
+            </div>
+            <div class="bg-blue-900/50 rounded-lg p-4 text-center border border-blue-400/30">
+              <p class="text-gray-400 text-sm uppercase tracking-wider">Accuracy</p>
+              <p class="text-4xl font-bold text-blue-300" x-text="accuracy + '%'"></p>
+            </div>
+          </div>
+
+          <!-- Game Court -->
+          <div class="relative w-full bg-gradient-to-b from-green-800 to-green-900 rounded-xl p-4 mb-8 overflow-hidden" style="height: 400px;">
+            <!-- Court markings -->
+            <div class="absolute inset-0 opacity-20">
+              <div class="absolute left-1/2 top-0 bottom-0 w-1 bg-white" style="transform: translateX(-50%)"></div>
+              <div class="absolute left-1/2 bottom-1/4 w-24 h-16 border-2 border-white rounded-full" style="transform: translateX(-50%)"></div>
+            </div>
+
+            <!-- Hoop at top right -->
+            <div class="absolute top-8 right-12">
+              <div class="relative w-16 h-1 bg-orange-500 rounded-full" style="box-shadow: inset 0 2px 4px rgba(0,0,0,0.5)">
+                <div class="absolute -inset-1 border-4 border-orange-600 rounded-full opacity-50"></div>
+              </div>
+              <div class="w-20 h-20 absolute top-3 left-1/2 transform -translate-x-1/2 pointer-events-none">
+                <!-- Backboard -->
+                <div class="absolute inset-0 bg-white/10 border-4 border-white rounded-lg" style="transform: perspective(100px) rotateY(-15deg)"></div>
+              </div>
+            </div>
+
+            <!-- Basketball that flies when you shoot -->
+            <div
+              x-show="ballVisible"
+              class="absolute w-6 h-6 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full shadow-lg"
+              :style="{
+                left: ballX + '%',
+                top: ballY + '%',
+                transition: shooting ? 'all 0.6s ease-in' : 'none',
+                boxShadow: '0 0 10px rgba(249, 115, 22, 0.8)'
+              }"
+            >
+              <div class="absolute inset-0 rounded-full border-2 border-orange-300 opacity-50"></div>
+            </div>
+
+            <!-- Miss/Make feedback -->
+            <div x-show="feedback" class="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div class="text-6xl font-black" :class="lastMade ? 'text-green-300 animate-bounce' : 'text-red-300'">
+                <span x-text="lastMade ? '🎉 SWISH!' : '😅 MISS!'"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Shooting Controls -->
+          <div class="flex gap-4 mb-6">
+            <button
+              @click="shoot()"
+              :disabled="shooting"
+              class="flex-1 px-6 py-4 bg-gradient-to-r from-orange-500 to-red-600 rounded-lg font-bold text-lg text-white hover:shadow-2xl hover:shadow-orange-500/50 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 transition active:scale-95"
+            >
+              <i class="fa-solid fa-basketball mr-2"></i> <span x-text="shooting ? 'SHOOTING...' : 'SHOOT!'"></span>
+            </button>
+            <button
+              @click="resetGame()"
+              class="px-6 py-4 bg-gray-700 hover:bg-gray-600 rounded-lg font-semibold text-white transition"
+            >
+              <i class="fa-solid fa-rotate-right mr-2"></i> Reset
+            </button>
+          </div>
+
+          <!-- Instructions -->
+          <p class="text-center text-gray-300 text-sm">
+            <i class="fa-solid fa-info-circle mr-2"></i>Click SHOOT and aim for the hoop! Accuracy improves your score multiplier.
+          </p>
         </div>
       </section>
 
